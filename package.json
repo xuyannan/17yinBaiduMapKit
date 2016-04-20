@@ -1,0 +1,27 @@
+{
+  "name": "react-native-baidumapkit-17yin",
+  "version": "1.0.0",
+  "description": "react native baidumapkit for 17yin",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/xuyannan/17yinBaiduMapKit.git"
+  },
+  "keywords": [
+    "react",
+    "native",
+    "baidumapkit",
+    "17yin"
+  ],
+	"peerDependencies": {
+    "react-native": ">=0.19.0"
+  },
+  "author": "xuyannan",
+  "license": "ISC"
+}
