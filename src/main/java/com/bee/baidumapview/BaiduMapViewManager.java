@@ -154,7 +154,6 @@ public class BaiduMapViewManager extends SimpleViewManager<MapView> {
      */
     @ReactProp(name="heatMapEnabled", defaultBoolean = false)
     public void setHeatMapEnabled(MapView mapView, boolean isEnabled) {
-        Log.d(TAG, "heatMapEnabled" + isEnabled);
         mapView.getMap().setBaiduHeatMapEnabled(isEnabled);
     }
 
@@ -179,9 +178,28 @@ public class BaiduMapViewManager extends SimpleViewManager<MapView> {
                 String markerInfoStr = array.getString(i);
                 try {
                     JSONObject  markerJson = new JSONObject(markerInfoStr);
-                    JSONObject coordinate = markerJson.getJSONObject("coordinate");
-                    LatLng point = new LatLng(coordinate.getDouble("lat"), coordinate.getDouble("lng"));
-                    BitmapDescriptor bitmap = BitmapDescriptorFactory.fromAssetWithDpi("Marker_Pink.png");
+                    String coordinate_str = markerJson.getString("coordinate");
+
+
+                    LatLng point = null;
+
+                    // TODO: 坐标为空时的处理
+                    if (coordinate_str.equals("null")) {
+                        if (currentLocation != null) {
+                            point = new LatLng(currentLocation.latitude, currentLocation.longitude);
+                        } else {
+                            Log.i(TAG, "myLocation is null");
+                        }
+                    } else {
+                        JSONObject coordinate = markerJson.getJSONObject("coordinate");
+                        point = new LatLng(coordinate.getDouble("lat"), coordinate.getDouble("lng"));
+                    }
+
+                    if (point == null) {
+                        continue;
+                    }
+
+                    BitmapDescriptor bitmap = BitmapDescriptorFactory.fromAssetWithDpi(markerJson.getBoolean("selected") ? "Marker_Pink.png": "Marker_Green.png");
                     //构建MarkerOption，用于在地图上添加Marker
                     OverlayOptions option = new MarkerOptions()
                             .position(point)
@@ -191,7 +209,6 @@ public class BaiduMapViewManager extends SimpleViewManager<MapView> {
                     //在地图上添加Marker，并显示
                     mapView.getMap().addOverlay(option);
                     boundsBuilder.include(point);
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
